@@ -3,26 +3,16 @@ const db = require("../database/models");
 const getAllGenres = async () => {
   try {
     const genres = await db.Genre.findAll({
-      attributes: ["id", "name", "ranking", "active", "created_at", "updated_at"],
+      order: [["name", "ASC"]],
     });
-    if (!genres) {
-      throw {
-        status: 404,
-        message: "No existen géneros",
-      };
-    }
-    return genres.map((genre) => ({
-      id: genre.id,
-      name: genre.name,
-      ranking: genre.ranking,
-      active: genre.active,
-      created_at: genre.created_at,
-      updated_at: genre.updated_at,
-    }));
+    return {
+      genres,
+    };
   } catch (error) {
+    console.log(error);
     throw {
-      status: 500,
-      message: error.message,
+      status: error.status || 500,
+      message: error.message || "Error en el servicio",
     };
   }
 };
@@ -36,7 +26,14 @@ const getGenreById = async (id) => {
       };
     }
     const genre = await db.Genre.findByPk(id, {
-      attributes: ["id", "name", "ranking", "active", "created_at", "updated_at"],
+      attributes: [
+        "id",
+        "name",
+        "ranking",
+        "active",
+        "created_at",
+        "updated_at",
+      ],
     });
     if (!genre) {
       throw {

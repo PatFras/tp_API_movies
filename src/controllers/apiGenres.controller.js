@@ -3,15 +3,14 @@ const { getAllGenres, getGenreById } = require("../services/genres.services");
 module.exports = {
   index: async (req, res) => {
     try {
-      const resultado = await getAllGenres();
+      const { genres } = await getAllGenres();
 
       return res.status(200).json({
+        ok: true,
         meta: {
-          status: 200,
-          total: resultado.length,
-          url: "api/v1/genres",
+          total: genres.length,
         },
-        data: resultado,
+        data: genres,
       });
     } catch (error) {
       return res.status(error.status || 500).json({
@@ -46,4 +45,3 @@ module.exports = {
     }
   },
 };
-
